@@ -1,11 +1,11 @@
 export async function onRequestPost(context) {
-  const body = await request.clone().text();
+  const body = await context.request.clone().text();
 
   // Hash the request body to use it as a part of the cache key
   const hash = await sha256(body);
 
   var ttlSecondsFromNow = 60 * 60; // 1 hour
-  await MESSAGES_KV.put(hash, body, { expirationTtl: ttlSecondsFromNow });
+  await context.env.MESSAGES_KV.put(hash, body, { expirationTtl: ttlSecondsFromNow });
 
   return new Response(hash);
 }
